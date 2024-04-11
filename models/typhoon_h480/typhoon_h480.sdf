@@ -429,7 +429,7 @@
         </plugin>
       </sensor>
     </link>
-    <joint name='cgo3_camera_joint' type='revolute'>
+    <joint name='cgo3_camera_joint' type='fixed'>
       <child>cgo3_camera_link</child>
       <parent>cgo3_horizontal_arm_link</parent>
       <pose>-0.01 0.03 -0.162 0 0 0</pose>

@@ -51,7 +51,7 @@ class DroneTakeoff:
 
 if __name__ == '__main__':
     try:
-        takeoff = DroneTakeoff(target_altitude=5)  # Target altitude in meters
+        takeoff = DroneTakeoff(target_altitude=10)  # Target altitude in meters
         takeoff.takeoff_and_hover()
     except rospy.ROSInterruptException:
         pass
