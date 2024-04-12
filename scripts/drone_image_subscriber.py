@@ -6,6 +6,8 @@ from cv_bridge import CvBridge, CvBridgeError
 import cv2
 import os
 import time
+from geometry_msgs.msg import Twist
+from geometry_msgs.msg import TwistStamped
 
 
 from typing import Iterable, Dict
@@ -30,8 +32,12 @@ predictions = []
 
 image_sequences = []
 index = 0
+velocity_publisher = None
 
 def image_callback(msg):
+    global velocity_publisher
+    global index
+    global image_sequences
     print("entering_function")
     bridge = CvBridge()
     try:
@@ -49,13 +55,29 @@ def image_callback(msg):
         
     else:
         
-        image_sequences = image_sequences[0][1:] + [cv_image]
-        
+        image_sequences = np.vstack((image_sequences[0][1:], [cv_image]))
+        print(image_sequences.shape)
+
+
     image_sequences = np.expand_dims(image_sequences, axis=0)
+    index += 1
 
     with tf.device('/cpu:0'):
-        print(model.predict(image_sequences))
+        preds = model.predict(image_sequences)
+        print(preds[0][63])
         
+        vx, vy, vz, omega_z = preds[0][63]
+        vel_msg = Twist()
+
+        # Set the velocities in the message
+        vel_msg.linear.x = 2 * vx
+        vel_msg.linear.y = 2 * vy
+        vel_msg.linear.z = 2 * vz
+        vel_msg.angular.z = 2 * omega_z
+
+        velocity_publisher.publish(vel_msg)
+        print("Velocity published:", vx, vy, vz, omega_z)
+
 
     # save_dir = "./image_feed"
     # if not os.path.exists(save_dir):
@@ -69,10 +91,15 @@ def image_callback(msg):
     # rospy.loginfo("Image saved as: {}".format(filename))
 
 def main():
+    global velocity_publisher
+    global index
+    global image_sequences
     rospy.init_node('drone_raw_image_viewer', anonymous=True)
     # Subscribe to the raw image topic
     rospy.Subscriber("/cgo3_camera/image_raw", Image, image_callback)
     print("Subscribed")
+    velocity_publisher = rospy.Publisher('/mavros/setpoint_velocity/cmd_vel_unstamped', Twist, queue_size=10)
+    
     
     rospy.spin()
     

@@ -49,7 +49,7 @@
   <node name="spawn_husky_model" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -model husky -x 2 -y 2 -z 0" />
 
   <!-- Launch the drone_takeoff_node -->
-  <node name="drone_takeoff_node" pkg="rover_tracking" type="offboard.py" output="screen"/>
+  <node name="drone_controller" pkg="rover_tracking" type="offboard.py" output="screen"/>
 
   <!-- Rviz -->
   <node name="rvizvisualisation" pkg="rviz" type="rviz" output="log" args="-d $(find rover_tracking)/rviz/rviz.rviz" />
