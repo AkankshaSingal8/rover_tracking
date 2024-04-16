@@ -384,7 +384,7 @@
         <always_on>1</always_on>
       </sensor>
       <sensor name="camera" type="camera">
-        <pose>0.0 0 -0.162 0 0 0</pose>
+        <pose>0.0 0 -0.162 0 1.5708 0</pose>
         <camera>
           <horizontal_fov>2.0</horizontal_fov>
           <image>
@@ -429,14 +429,14 @@
         </plugin>
       </sensor>
     </link>
-    <joint name='cgo3_camera_joint' type='revolute'>
+    <joint name='cgo3_camera_joint' type='fixed'>
       <child>cgo3_camera_link</child>
       <parent>cgo3_horizontal_arm_link</parent>
-      <pose>-0.01 0.03 -0.162 0 90 0</pose>
+      <pose>-0.01 0.03 -0.162 0 0 0</pose>
       <axis>
         <xyz>0 -1 0</xyz>
         <limit>
-          <lower>-2.05</lower>
+          <!--lower>-1.05</lower-->
           <upper>2.09</upper>
           <effort>100</effort>
           <velocity>-1</velocity>
@@ -1137,7 +1137,7 @@
         </ode>
       </physics>
     </joint>
-
+    <!--
     <include>
       <uri>model://sonar</uri>
       <pose>0.08 0 -0.03 0 0 3.141592</pose>
@@ -1153,7 +1153,7 @@
         </limit>
       </axis>
     </joint>
-
+    !-->
 
     <include>
       <uri>model://gps</uri>
