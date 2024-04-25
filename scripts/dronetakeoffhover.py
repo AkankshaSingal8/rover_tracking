@@ -16,11 +16,13 @@ class DroneTakeoff:
         # Initialize the ROS publisher and subscribers
         self.pose_publisher = rospy.Publisher('/mavros/setpoint_position/local', PoseStamped, queue_size=10)
         self.state_subscriber = rospy.Subscriber('/mavros/state', State, self.state_cb)
+        self.local_position_subscriber = rospy.Subscriber('/mavros/local_position/pose', PoseStamped, self.position_cb)
         self.arming_client = rospy.ServiceProxy('/mavros/cmd/arming', CommandBool)
         self.set_mode_client = rospy.ServiceProxy('/mavros/set_mode', SetMode)
         
         self.rate = rospy.Rate(20)  # Hz
         self.state = State()
+        self.current_pose = PoseStamped()
 
     def state_cb(self, state):
         self.state = state
